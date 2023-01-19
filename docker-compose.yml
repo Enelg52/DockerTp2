@@ -1,0 +1,29 @@
+version: '3'
+networks:
+  net:
+    ipam:
+      config:
+      - subnet: 10.10.10.0/24
+services:
+  mongo:
+    image: "mongo:3.2"
+    container_name: mongo
+    restart: unless-stopped
+    networks:
+      net:
+        ipv4_address: 10.10.10.10
+    ports:
+      - 27017:27017
+  app:
+    image: "enelg/tp2docker:v1"
+    container_name: tp2docker 
+    restart: unless-stopped
+    environment:
+      - DB_URL=10.10.10.10
+    ports:
+      - 5000:5000
+    depends_on:
+      - "mongo"
+    networks:
+      net:
+        ipv4_address: 10.10.10.11
